@@ -1,0 +1,4 @@
+{
+  "mongoUrl": "mongodb+srv://admin1:sliceoflif3@cluster0-ntkvn.mongodb.net/test?retryWrites=true&w=majority",
+  "baseUrl":"http://localhost:5000"
+}

@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const Url = require('../models/Url');
+const UrlService = require('../services/UrlService');
 
 router.get('/:code', async (req, res) => {
-  try{
-    const code = req.params.code;
-    const url = await Url.findOne({ urlCode: code});
-    if(url){
-      return res.redirect(url.longUrl);
-    }else{
-      return res.send(404).json('No url found');
-    }
-  }catch(e){
-    console.log(e.message);
-    res.send(500).json('Server error');
-  }
+	try {
+		const code = req.params.code;
+		const service = new UrlService();
+		const response = await service.getUrl(code, req.ip);
+		if (response.ok) {
+			console.log('==> URL FOUND ', response.url._id);
+			return res.json(response.url);
+		} else {
+			return res.sendStatus(404);
+		}
+	} catch (e) {
+		console.log(e.message);
+		return res.sendStatus(500);
+	}
 });
 
 module.exports = router;

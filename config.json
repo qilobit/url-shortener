@@ -1,0 +1,6 @@
+{
+  "db": {
+    "url": "mongodb+srv://admin1:sliceoflif3@hsbg-orl-db-ntkvn.mongodb.net/url_shortener?retryWrites=true&w=majority"
+  },
+  "app_port": 3000
+}

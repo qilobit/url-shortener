@@ -7,15 +7,6 @@ const urlSquema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	views: [
-		{
-			ip: String,
-			date: {
-				type: Date,
-				default: Date.now
-			}
-		}
-	],
 	viewsCount: {
 		type: Number,
 		default: 0

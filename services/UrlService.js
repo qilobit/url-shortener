@@ -1,6 +1,7 @@
 const shortid = require('shortid');
 const validUrl = require('valid-url');
 const Url = require('../models/Url');
+const UrlVisit = require('../models/UrlVisit');
 
 class UrlService {
 	constructor() {}
@@ -14,10 +15,13 @@ class UrlService {
 			const url = await Url.findOne({ urlCode: code });
 			if (url) {
 				url.viewsCount++;
-				url.views.push({
-					id: ip
-				});
 				const savedData = await url.save();
+
+				const newVisit = new UrlVisit();
+				newVisit.url = url._id;
+				newVisit.visitorIp = ip;
+				await newVisit.save();
+			
 				response.ok = true;
 				response.url = savedData;
 			} else {
@@ -60,8 +64,9 @@ class UrlService {
 			url: null
 		};
 		const baseUrl = 'http://localhost:3000'; //TODO change this
-		console.log('longUrl ', longUrl);
 		const urlCode = shortid.generate();
+		
+		console.log('longUrl ', longUrl);
 		console.log('urlCode ', urlCode);
 
 		if (validUrl.isUri(longUrl)) {
@@ -88,6 +93,27 @@ class UrlService {
 			}
 		} else {
 			response.message = 'Invalid URL';
+		}
+		return response;
+	}
+
+	async getAll() {
+		const response = {
+			ok: false,
+			message: '',
+			urls: null
+		};
+		try {
+			const urls = await Url.find();
+			if (urls) {
+				response.ok = true;
+				response.urls = urls;
+			} else {
+				response.message = 'No urls found';
+			}
+		} catch (error) {
+			console.log('==> ERR ', error);
+			response.message = error.message;
 		}
 		return response;
 	}

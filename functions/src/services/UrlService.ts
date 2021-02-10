@@ -5,33 +5,15 @@ const UrlVisit = require('../models/UrlVisit');
 
 export class UrlService {
 	constructor() {}
-	async getUrl(code: string, ip: string) {
-		const response = {
-			ok: false,
-			message: '',
-			url: null
-		};
-		try {
-			const url = await Url.findOne({ urlCode: code });
-			if (url) {
-				url.viewsCount++;
-				const savedData = await url.save();
-
-				const newVisit = new UrlVisit();
-				newVisit.url = url._id;
-				newVisit.visitorIp = ip;
-				await newVisit.save();
-			
-				response.ok = true;
-				response.url = savedData;
-			} else {
-				response.message = 'URL not found';
-			}
-		} catch (error) {
-			console.log('==> ERR ', error);
-			response.message = error.message;
-		}
-		return response;
+		async getUrl(code: string, ip: string) {
+		const url = await Url.findOne({ urlCode: code });
+		url.viewsCount++;
+		const savedData = await url.save();
+		const newVisit = new UrlVisit();
+		newVisit.url = url._id;
+		newVisit.visitorIp = ip;
+		await newVisit.save();
+		return savedData;
 	}
 
 	async updateActualVisits(_id: string) {

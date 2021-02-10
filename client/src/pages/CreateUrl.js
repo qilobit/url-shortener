@@ -17,10 +17,10 @@ const CreateUrlPage = () => {
       console.log('res ', res);
       if(res.ok){
         setsuccess(true);
-        setnewCode(res.data.shortUrl);
+        setnewCode(res.url.urlCode);
         seterror('');
       }else{
-        seterror(res.data);
+        seterror(res.message);
       }
       setloading(false);
 
@@ -46,7 +46,7 @@ const CreateUrlPage = () => {
       </form>
 
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">Url saved! <strong>{newCode}</strong></div>}
+      {success && <div className="alert alert-success">Url saved! <a target="_blank" href={`${window.location.origin}/${newCode}`}><strong>{`${window.location.origin}/${newCode}`}</strong></a></div>}
 
     </div>
   )

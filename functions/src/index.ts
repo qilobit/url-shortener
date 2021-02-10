@@ -1,67 +1,51 @@
 import * as functions from "firebase-functions";
 import * as mongoose from 'mongoose';
+import * as express from 'express';
+import * as cors from 'cors';
 import { UrlService } from "./services/UrlService";
+const expressApp = express();
 
-// const config = require('./config.json');
+expressApp.use(cors());
 
-export const getAllUrls = functions.https.onCall(async (data, context) => {
-  // if(!context.auth){
-  //   return {
-  //     ok: false,
-  //     message: 'Not authorized'
-  //   };
-  // }
+expressApp.get('/all-url', async (req: express.Request, res: express.Response) => {
   try {
     await getCon();
 		const service = new UrlService();
 		const response = await service.getAll();
-		return response;
+		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-		throw new functions.https.HttpsError('aborted', e.message);
+    return res.status(500).json({message: e.message});
 	}
-
 });
 
-export const getOneUrl = functions.https.onCall(async (data, context) => {
-  // if(!context.auth){
-  //   return {
-  //     ok: false,
-  //     message: 'Not authorized'
-  //   };
-  // }
+expressApp.get('/one/:code', async (req: express.Request, res: express.Response) => {
   try {
-    const {code} = data;
+    const {code} = req.params;
     await getCon();
 		const service = new UrlService();
-		const response = await service.getUrl(code, context.rawRequest.ip);
-		return response;
+		const response = await service.getUrl(code, req.ip);
+		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-		throw new functions.https.HttpsError('aborted', e.message);
+    return res.status(500).json({message: e.message});
 	}
-
 });
 
-export const saveOneUrl = functions.https.onCall(async (data, context) => {
-  // if(!context.auth){
-  //   return {
-  //     ok: false,
-  //     message: 'Not authorized'
-  //   };
-  // }
+expressApp.post('/one', async (req: express.Request, res: express.Response) => {
   try {
-    const {longUrl} = data;
+    const {longUrl} = req.body;
     await getCon();
 		const service = new UrlService();
 		const response = await service.saveUrl(longUrl);
-		return response;
+		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-		throw new functions.https.HttpsError('aborted', e.message);
+		return res.status(500).json({message: e.message});
 	}
-
 });
+
+export const app = functions.runWith({memory: '1GB'}).https.onRequest(expressApp);
 
 function getCon(){
   return new Promise((resolve, reject) => {

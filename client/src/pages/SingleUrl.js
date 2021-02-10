@@ -12,6 +12,7 @@ const SingleUrl = ({ match }) => {
   const getData = async () => {
     setloading(true);
     const res = await service.getUrl(match.params.url);
+    console.log(res);
     if(res.ok){
       seturlData(res.data);
       startCountDown();
@@ -45,20 +46,14 @@ const SingleUrl = ({ match }) => {
       </div>
     )
   }
-  //reCapcha
-  //client 6Lfen1EaAAAAACb88fia27WkKvUzrkUuyAlU-2TV
-  //server 6Lfen1EaAAAAACDp8NoOADc-Dlj65XjWy_eO40n6
+
   return ( 
     <>
     <div className="card p-3 ad my-3">
       <a href="https://www.linkedin.com/pulse/after-publishing-50-articles-linkedin-ive-learned-tom-popomaronis" target="_black">
         <img src={process.env.PUBLIC_URL +'/ad.png'} alt="Advertising"/>
       </a>
-    </div>  
-    <form action="?" method="POST">
-      <div className="g-recaptcha" data-sitekey="6Lfen1EaAAAAACb88fia27WkKvUzrkUuyAlU"></div>
-      <br/>
-    </form>    
+    </div>   
     {
       loading 
       ? <div className="text-center">loading..</div>

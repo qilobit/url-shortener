@@ -1,10 +1,21 @@
-import firebase from 'firebase/app';
+const baseApi = 'https://us-central1-pagueporver.cloudfunctions.net/app';
 export class UrlService{
   async getUrl(id){
     try {
-      const _fun = this.getCallableFunction('getOneUrl');
-      const res = await _fun({code: id});
-      return res.data;
+      const res = await fetch(`${baseApi}/one/${id}`);
+      if(res.status === 200){
+        const jsonRes = await res.json();
+        return {
+          ok: true,
+          data: jsonRes
+        }
+      }else{
+        console.log('err ', res.statusText);
+        return {
+          ok: false,
+          data: res.statusText
+        }
+      }
     } catch (error) {
       console.log('err ', error);
       return {
@@ -15,9 +26,25 @@ export class UrlService{
   }
   async saveUrl(longUrl){
     try {
-      const _fun = this.getCallableFunction('saveOneUrl');
-      const res = await _fun({longUrl: longUrl});
-      return res.data;
+      const res = await fetch(`${baseApi}/one`, {
+        body: JSON.stringify({
+          longUrl: longUrl
+        }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if(res.status === 200){
+        const jsonRes = await res.json();
+        return jsonRes;
+      }else{
+        console.log('err ', res.statusText);
+        return {
+          ok: false,
+          data: res.statusText
+        }
+      }
     } catch (error) {
       console.log('err ', error);
       return {
@@ -25,23 +52,5 @@ export class UrlService{
         data: error
       }
     }
-  }
-
-  async getAll(){
-    try {
-      const _fun = this.getCallableFunction('getAllUrls');
-      const res = await _fun({});
-      return res.data;
-    } catch (error) {
-      console.log('err ', error);
-      return {
-        ok: false,
-        data: error
-      }
-    }
-  }
-
-  getCallableFunction(name){
-    return firebase.functions().httpsCallable(name);
   }
 }

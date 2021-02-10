@@ -3,9 +3,9 @@ const validUrl = require('valid-url');
 const Url = require('../models/Url');
 const UrlVisit = require('../models/UrlVisit');
 
-class UrlService {
+export class UrlService {
 	constructor() {}
-	async getUrl(code, ip) {
+	async getUrl(code: string, ip: string) {
 		const response = {
 			ok: false,
 			message: '',
@@ -34,7 +34,7 @@ class UrlService {
 		return response;
 	}
 
-	async updateActualVisits(_id) {
+	async updateActualVisits(_id: string) {
 		const response = {
 			ok: false,
 			message: '',
@@ -57,7 +57,7 @@ class UrlService {
 		return response;
 	}
 
-	async saveUrl(longUrl) {
+	async saveUrl(longUrl: string) {
 		const response = {
 			ok: false,
 			message: '',
@@ -118,4 +118,4 @@ class UrlService {
 		return response;
 	}
 }
-module.exports = UrlService;
+

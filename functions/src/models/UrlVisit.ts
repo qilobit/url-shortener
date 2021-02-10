@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
+
 const urlVisitSquema = new mongoose.Schema({
 	url: {
         type: mongoose.Schema.Types.ObjectId,

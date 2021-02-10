@@ -1,5 +1,5 @@
 const express = require('express');
-const UrlService = require('../services/UrlService');
+const UrlService = require('../../../services/UrlService');
 const router = express.Router();
 
 router.post('/shorten', async (req, res) => {

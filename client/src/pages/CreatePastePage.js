@@ -15,11 +15,16 @@ const CreatePastePage = () => {
     e.preventDefault();
     if(pastContent !== ''){
       setloading(true);
-      const res = await service.saveUrl(pastContent);
+      const res = await service.savePaste(
+        pastContent,
+        null,//password
+        false,//isPrivate
+        null//expirationDate
+      );
       console.log('res ', res);
       if(res.ok){
         setsuccess(true);
-        setnewCode(res.data.shortUrl);
+        setnewCode(res.data.paste?._id);
         seterror('');
       }else{
         seterror(res.data);

@@ -1,11 +1,12 @@
 const shortid = require('shortid');
 const validUrl = require('valid-url');
 const Url = require('../models/Url');
+const Paste = require('../models/Paste');
 const UrlVisit = require('../models/UrlVisit');
 
 export class UrlService {
 	constructor() {}
-		async getUrl(code: string, ip: string) {
+	async getUrl(code: string, ip: string) {
 		const url = await Url.findOne({ urlCode: code });
 		url.viewsCount++;
 		const savedData = await url.save();
@@ -99,5 +100,40 @@ export class UrlService {
 		}
 		return response;
 	}
+
+	async savePaste(content: string, isPrivate: Boolean=false, password?: string, expirationDate?: string,){
+		const response = {
+			ok: false,
+			message: '',
+			paste: null
+		};
+
+		try {
+
+			const paste = new Paste({
+				content,
+				isPrivate,
+				password: password ? password : null,
+				expirationDate: expirationDate ? expirationDate : null
+			});
+			await paste.save();
+			response.paste = paste;
+			response.ok = true;
+			
+		} catch (e) {
+			console.log(e.message);
+			response.message = e.message;
+		}
+
+		return response;
+	}
+
+	async getPaste(id: string) {
+		const paste = await Paste.findById(id);
+		paste.viewsCount++;
+		const savedData = await paste.save();
+		return savedData;
+	}
+
 }
 

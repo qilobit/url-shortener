@@ -19,7 +19,7 @@ expressApp.get('/all-url', async (req: express.Request, res: express.Response) =
 	}
 });
 
-expressApp.get('/one/:code', async (req: express.Request, res: express.Response) => {
+expressApp.get('/url/:code', async (req: express.Request, res: express.Response) => {
   try {
     const {code} = req.params;
     await getCon();
@@ -32,7 +32,7 @@ expressApp.get('/one/:code', async (req: express.Request, res: express.Response)
 	}
 });
 
-expressApp.post('/one', async (req: express.Request, res: express.Response) => {
+expressApp.post('/url', async (req: express.Request, res: express.Response) => {
   try {
     const {longUrl} = req.body;
     await getCon();
@@ -42,6 +42,32 @@ expressApp.post('/one', async (req: express.Request, res: express.Response) => {
 	} catch (e) {
 		console.log(e.message);
 		return res.status(500).json({message: e.message});
+	}
+});
+
+expressApp.post('/paste', async (req: express.Request, res: express.Response) => {
+  try {
+    const {content, password, isPrivate, expirationDate} = req.body;
+    await getCon();
+		const service = new UrlService();
+		const response = await service.savePaste(content, password, isPrivate, expirationDate);
+		return res.json(response);
+	} catch (e) {
+		console.log(e.message);
+		return res.status(500).json({message: e.message});
+	}
+});
+
+expressApp.get('/paste/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const {id} = req.params;
+    await getCon();
+		const service = new UrlService();
+		const response = await service.getPaste(id);
+		return res.json(response);
+	} catch (e) {
+		console.log(e.message);
+    return res.status(500).json({message: e.message});
 	}
 });
 

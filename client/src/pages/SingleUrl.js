@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { UrlService } from '../services/UrlService'
 import './SingleUrl.css';
+import Loader from '../components/Loader';
+import { Redirect } from 'react-router-dom';
 
 const SingleUrl = ({ match }) => {
   const [urlData, seturlData] = useState(null);
@@ -17,7 +19,7 @@ const SingleUrl = ({ match }) => {
       seturlData(res.data);
       startCountDown();
     }else{
-      seterror(res.data);
+      seterror(true);
     }
     setloading(false);
   };
@@ -38,13 +40,8 @@ const SingleUrl = ({ match }) => {
     getData();
   }, [match]);
   
-  if(!match.params.url){
-    //TODO
-    return (
-      <div className="container">
-        <h2>No url found</h2>
-      </div>
-    )
+  if(error){
+    return <Redirect to="/not-found"/>
   }
 
   return ( 
@@ -56,7 +53,9 @@ const SingleUrl = ({ match }) => {
     </div>   
     {
       loading 
-      ? <div className="text-center">loading..</div>
+      ? <div className="text-center">
+          <Loader />
+        </div>
       : <div className="container text-center">
           {
             finish === false
@@ -66,7 +65,7 @@ const SingleUrl = ({ match }) => {
             : <a href={urlData?.longUrl} target="_blank" className="btn btn-primary">Open link</a>
           }
 
-          <p>Visits: {urlData?.viewsCount}</p>
+          <p className="mt-2">Visits: <span className="badge bg-secondary">{urlData?.viewsCount}</span></p>
 
           {error && <p className="text-danger">{ error }</p>}
         </div>

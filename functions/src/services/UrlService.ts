@@ -101,7 +101,7 @@ export class UrlService {
 		return response;
 	}
 
-	async savePaste(content: string, isPrivate: Boolean=false, password?: string, expirationDate?: string,){
+	async savePaste(content: string, password?: string, isPrivate: Boolean=false, expirationDate?: string,){
 		const response = {
 			ok: false,
 			message: '',

@@ -7,14 +7,25 @@ const UrlVisit = require('../models/UrlVisit');
 export class UrlService {
 	constructor() {}
 	async getUrl(code: string, ip: string) {
+		const res = {
+			ok: false,
+			notfound: false,
+			url: null
+		};
 		const url = await Url.findOne({ urlCode: code });
-		url.viewsCount++;
-		const savedData = await url.save();
-		const newVisit = new UrlVisit();
-		newVisit.url = url._id;
-		newVisit.visitorIp = ip;
-		await newVisit.save();
-		return savedData;
+		if(url){
+			url.viewsCount++;
+			const savedData = await url.save();
+			const newVisit = new UrlVisit();
+			newVisit.url = url._id;
+			newVisit.visitorIp = ip;
+			await newVisit.save();
+			res.url = savedData;
+			res.ok = true;
+		}else{
+			res.notfound = true;
+		}
+		return res;
 	}
 
 	async updateActualVisits(_id: string) {
@@ -130,10 +141,16 @@ export class UrlService {
 
 	async getPaste(id: string) {
 		const paste = await Paste.findById(id);
-		paste.viewsCount++;
-		const savedData = await paste.save();
-		return savedData;
+		if(paste){
+			if(paste.expired){
+				throw new Error('Url expired');
+			}
+			paste.viewsCount++;
+			const savedData = await paste.save();
+			return savedData;
+		}else{
+			throw new Error('Not found');
+		}
 	}
-
 }
 

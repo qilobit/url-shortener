@@ -24,11 +24,20 @@ expressApp.get('/url/:code', async (req: express.Request, res: express.Response)
     const {code} = req.params;
     await getCon();
 		const service = new UrlService();
-		const response = await service.getUrl(code, req.ip);
-		return res.json(response);
+    const ip = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+    console.log('Visit from ', ip);
+		const response = await service.getUrl(code, ip);
+    if(response.notfound){
+      return res.status(404);
+    }else{
+      return res.json(response.url);
+    }
 	} catch (e) {
 		console.log(e.message);
-    return res.status(500).json({message: e.message});
+    return res.json({
+      ok: false,
+      message: e.message
+    });
 	}
 });
 

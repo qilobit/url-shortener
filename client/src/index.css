@@ -23,3 +23,6 @@ code {
 .keep-spaces{
   white-space: break-spaces
 }
+.break-word{
+  word-break: break-all;
+}

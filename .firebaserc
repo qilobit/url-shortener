@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "pagueporver"
+  },
+  "targets": {
+    "pagueporver": {
+      "hosting": {
+        "short": [
+          "shortit"
+        ]
+      }
+    }
   }
 }

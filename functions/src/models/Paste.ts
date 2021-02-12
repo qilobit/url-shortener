@@ -20,6 +20,10 @@ const pasteSquema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  expired: {
+    type: Boolean,
+    default: false
+  },
   content: {
     type: String,
     maxlength: 5000

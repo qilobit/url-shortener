@@ -1,7 +1,8 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import { UrlService } from '../services/UrlService';
 import Loader from '../components/Loader';
-const MAX_LENGTH = 300;
+import Alert from '../components/Alert';
+const MAX_LENGTH = 1000;
 
 const CreatePastePage = () => {
   const [pastContent, setpastContent] = useState('');
@@ -13,6 +14,7 @@ const CreatePastePage = () => {
   const [expiration, setexpiration] = useState('');
   const [password, setpassword] = useState('');
   const service = new UrlService();
+  const contentElmentRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,19 +35,20 @@ const CreatePastePage = () => {
         seterror(res.data);
       }
       setloading(false);
-
+    }else{
+      contentElmentRef.current.focus();
     }
   };
   const handleChange = (e) => {
     setpastContent(e.target.value);
-    setremaininChars(pastContent.length === 0 ? 0 : (pastContent.length + 1));
+    setremaininChars(pastContent.length === 0 ? 0 : pastContent.length);
   };
-
   return (
     <div className="container">
       <h4>Content <small>(Can include HTML)</small></h4>
       <form onSubmit={handleSubmit} className="mb-2">
         <textarea
+          ref={contentElmentRef}
           disabled={loading}
           value={pastContent} 
           onChange={handleChange}
@@ -92,8 +95,8 @@ const CreatePastePage = () => {
         </div>      
       </form>
 
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">Paste saved! <a target="_blank" href={`${window.location.origin}/paste/${newCode}`}><strong>{`${window.location.origin}/paste/${newCode}`}</strong></a></div>}
+      {error && <Alert type="danger" content={error}/>}
+      {success && <div className="alert alert-success break-word">Paste saved! <a target="_blank" href={`${window.location.origin}/paste/${newCode}`}><strong>{`${window.location.origin}/paste/${newCode}`}</strong></a></div>}
 
     </div>
   )

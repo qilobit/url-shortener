@@ -1,4 +1,5 @@
-const baseApi = 'https://us-central1-pagueporver.cloudfunctions.net/app';
+const baseApi = 'http://localhost:5001/pagueporver/us-central1/app';
+//prod url https://us-central1-pagueporver.cloudfunctions.net/app
 export class UrlService{
   async getUrl(id){
     try {
@@ -13,7 +14,8 @@ export class UrlService{
         console.log('err ', res.statusText);
         return {
           ok: false,
-          data: res.statusText
+          data: res.statusText,
+          notfound: res.status === 404
         }
       }
     } catch (error) {

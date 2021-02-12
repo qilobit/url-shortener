@@ -15,6 +15,10 @@ const urlSquema = new mongoose.Schema({
 		type: Number,
 		default: 0
 	},
+	likesCount: {
+		type: Number,
+		default: 0
+	},
 	actualVisitsCount: {
 		type: Number,
 		default: 0

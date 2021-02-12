@@ -15,7 +15,10 @@ expressApp.get('/all-url', async (req: express.Request, res: express.Response) =
 		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-    return res.status(500).json({message: e.message});
+    return res.json({
+      ok: false,
+      message: e.message
+    });
 	}
 });
 
@@ -27,11 +30,7 @@ expressApp.get('/url/:code', async (req: express.Request, res: express.Response)
     const ip = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
     console.log('Visit from ', ip);
 		const response = await service.getUrl(code, ip);
-    if(response.notfound){
-      return res.status(404);
-    }else{
-      return res.json(response.url);
-    }
+    return res.json(response);
 	} catch (e) {
 		console.log(e.message);
     return res.json({
@@ -43,27 +42,49 @@ expressApp.get('/url/:code', async (req: express.Request, res: express.Response)
 
 expressApp.post('/url', async (req: express.Request, res: express.Response) => {
   try {
-    const {longUrl} = req.body;
+    const {longUrl, baseUrl} = req.body;
     await getCon();
 		const service = new UrlService();
-		const response = await service.saveUrl(longUrl);
+		const response = await service.saveUrl(longUrl, baseUrl);
 		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-		return res.status(500).json({message: e.message});
+    return res.json({
+      ok: false,
+      message: e.message
+    });
+	}
+});
+
+expressApp.post('/paste/like/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const {id} = req.params;
+    await getCon();
+		const service = new UrlService();
+		const response = await service.likePaste(id);
+		return res.json(response);
+	} catch (e) {
+		console.log(e.message);
+    return res.json({
+      ok: false,
+      message: e.message
+    });
 	}
 });
 
 expressApp.post('/paste', async (req: express.Request, res: express.Response) => {
   try {
-    const {content, password, isPrivate, expirationDate} = req.body;
+    const {title, content, password, isPrivate, expirationDate} = req.body;
     await getCon();
 		const service = new UrlService();
-		const response = await service.savePaste(content, password, isPrivate, expirationDate);
+		const response = await service.savePaste(title, content, password, isPrivate, expirationDate);
 		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-		return res.status(500).json({message: e.message});
+    return res.json({
+      ok: false,
+      message: e.message
+    });
 	}
 });
 
@@ -76,7 +97,10 @@ expressApp.get('/paste/:id', async (req: express.Request, res: express.Response)
 		return res.json(response);
 	} catch (e) {
 		console.log(e.message);
-    return res.status(500).json({message: e.message});
+    return res.json({
+      ok: false,
+      message: e.message
+    });
 	}
 });
 

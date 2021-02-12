@@ -24,9 +24,19 @@ const pasteSquema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  title: {
+    type: String,
+    maxlength: 100,
+    required: true
+  },
   content: {
     type: String,
-    maxlength: 5000
-  }
+    maxlength: 5000,
+    required: true
+  },
+  likesCount: {
+		type: Number,
+		default: 0
+	}
 });
 module.exports = mongoose.model('Paste', pasteSquema);

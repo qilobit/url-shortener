@@ -6,7 +6,7 @@ const CreateUrlPage = () => {
   const [error, seterror] = useState(null);
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
-  const [newCode, setnewCode] = useState('')
+  const [shortUrl, setShortUrl] = useState('')
   const service = new UrlService();
 
   const handleSubmit = async (e) => {
@@ -17,7 +17,7 @@ const CreateUrlPage = () => {
       console.log('res ', res);
       if(res.ok){
         setsuccess(true);
-        setnewCode(res.url.urlCode);
+        setShortUrl(res.url.shortUrl);
         seterror('');
       }else{
         seterror(res.message);
@@ -46,7 +46,7 @@ const CreateUrlPage = () => {
       </form>
 
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">Url saved! <a target="_blank" href={`${window.location.origin}/${newCode}`}><strong>{`${window.location.origin}/${newCode}`}</strong></a></div>}
+      {success && <div className="alert alert-success">Url saved! <a target="_blank" href={`${shortUrl}`}><strong>{`${shortUrl}`}</strong></a></div>}
 
     </div>
   )

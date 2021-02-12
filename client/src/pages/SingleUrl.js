@@ -4,6 +4,7 @@ import './SingleUrl.css';
 import Loader from '../components/Loader';
 import { Redirect } from 'react-router-dom';
 import Alert from '../components/Alert';
+import AdCard from '../components/AdCard';
 
 const SingleUrl = ({ match }) => {
   const [urlData, seturlData] = useState(null);
@@ -19,10 +20,10 @@ const SingleUrl = ({ match }) => {
     const res = await service.getUrl(match.params.url);
     console.log(res);    
     if(res.ok){
-      if(res.data.expired === true){
+      if(res.url.expired === true){
         setisExpired(true);
       }else{
-        seturlData(res.data);
+        seturlData(res.url);
         setisOk(true);
         startCountDown();
       }
@@ -54,11 +55,7 @@ const SingleUrl = ({ match }) => {
 
   return ( 
     <>
-    <div className="card p-3 ad my-3">
-      <a href="https://www.linkedin.com/pulse/after-publishing-50-articles-linkedin-ive-learned-tom-popomaronis" target="_black">
-        <img src={process.env.PUBLIC_URL +'/ad.png'} alt="Advertising"/>
-      </a>
-    </div>   
+    <AdCard/>
     {
       loading 
       ? <div className="text-center">

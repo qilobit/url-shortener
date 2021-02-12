@@ -6,6 +6,7 @@ const MAX_LENGTH = 1000;
 
 const CreatePastePage = () => {
   const [pastContent, setpastContent] = useState('');
+  const [title, setTitle] = useState('');
   const [error, seterror] = useState(null);
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
@@ -15,29 +16,36 @@ const CreatePastePage = () => {
   const [password, setpassword] = useState('');
   const service = new UrlService();
   const contentElmentRef = useRef(null);
+  const titleElementRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(pastContent !== ''){
-      setloading(true);
-      const res = await service.savePaste(
-        pastContent,
-        password,
-        false,//isPrivate
-        expiration
-      );
-      console.log('res ', res);
-      if(res.ok){
-        setsuccess(true);
-        setnewCode(res.paste?._id);
-        seterror('');
-      }else{
-        seterror(res.data);
-      }
-      setloading(false);
-    }else{
-      contentElmentRef.current.focus();
+    if(title === ''){
+      titleElementRef.current.focus();
+      return;
     }
+    if(pastContent === ''){
+      contentElmentRef.current.focus();
+      return;
+    }
+    setloading(true);
+    const res = await service.savePaste(
+      title,
+      pastContent,
+      password,
+      false,//isPrivate
+      expiration
+    );
+    console.log('res ', res);
+    if(res.ok){
+      setsuccess(true);
+      setnewCode(res.paste?._id);
+      seterror('');
+    }else{
+      seterror(res.message);
+    }
+    setloading(false);
+    
   };
   const handleChange = (e) => {
     setpastContent(e.target.value);
@@ -45,24 +53,39 @@ const CreatePastePage = () => {
   };
   return (
     <div className="container">
-      <h4>Content <small>(Can include HTML)</small></h4>
-      <form onSubmit={handleSubmit} className="mb-2">
-        <textarea
-          ref={contentElmentRef}
-          disabled={loading}
-          value={pastContent} 
-          onChange={handleChange}
-          onKeyUp={handleChange}
-          cols="25"
-          rows="10"
-          className="form-control mt-2" 
-          maxLength={MAX_LENGTH}>
-        </textarea>
+      <h4>Create a paste</h4>
+      <form onSubmit={handleSubmit} className="my-2">
+        <div className="form-group">
+          <label htmlFor="paste-title">Title</label>
+          <input 
+            ref={titleElementRef}
+            value={title}
+            maxLength="100"
+            onChange={(e) => setTitle(e.target.value)}
+            type="text" 
+            id="paste-title" 
+            className="form-control"/>
+        </div>
+        <div className="form-group">
+          <label htmlFor="paste-content">Content</label>
+          <textarea
+            id="paste-content"
+            ref={contentElmentRef}
+            disabled={loading}
+            value={pastContent} 
+            onChange={handleChange}
+            onKeyUp={handleChange}
+            cols="25"
+            rows="10"
+            className="form-control mt-2" 
+            maxLength={MAX_LENGTH}>
+          </textarea>
+        </div>
         <div className="text-right">{remaininChars}/{MAX_LENGTH}</div>
 
         <div className="row mb-2">
           <div className="col-sm-6">
-            <label htmlFor="pass">Password protected</label>
+            <label htmlFor="pass">Password protected <b>(Most be logged)</b></label>
             <input 
               disabled={loading}
               value={password} 

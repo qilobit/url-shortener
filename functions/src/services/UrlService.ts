@@ -31,59 +31,48 @@ export class UrlService {
 	async updateActualVisits(_id: string) {
 		const response = {
 			ok: false,
-			message: '',
+			notfound: false,
 			url: null
 		};
-		try {
-			const url = await Url.findById(_id);
-			if (url) {
-				url.actualVisits++;
-				const savedData = await url.save();
-				response.ok = true;
-				response.url = savedData;
-			} else {
-				response.message = 'URL not found';
-			}
-		} catch (error) {
-			console.log('==> ERR ', error);
-			response.message = error.message;
+		const url = await Url.findById(_id);
+		if (url) {
+			url.actualVisits++;
+			const savedData = await url.save();
+			response.ok = true;
+			response.url = savedData;
+		} else {
+			response.notfound = true;
 		}
 		return response;
 	}
 
-	async saveUrl(longUrl: string) {
+	async saveUrl(longUrl: string, baseUrl: string) {
 		const response = {
 			ok: false,
 			message: '',
 			url: null
 		};
-		const baseUrl = 'http://localhost:3000'; //TODO change this
 		const urlCode = shortid.generate();
 		
 		console.log('longUrl ', longUrl);
 		console.log('urlCode ', urlCode);
 
 		if (validUrl.isUri(longUrl)) {
-			try {
-				let url = await Url.findOne({ longUrl });
-				if (url) {
-					response.url = url;
-					response.ok = true;
-				} else {
-					const shortUrl = `${baseUrl}/${urlCode}`;
-					url = new Url({
-						longUrl,
-						shortUrl,
-						urlCode,
-						date: new Date()
-					});
-					await url.save();
-					response.url = url;
-					response.ok = true;
-				}
-			} catch (e) {
-				console.log(e.message);
-				response.message = e.message;
+			let url = await Url.findOne({ longUrl });
+			if (url) {
+				response.url = url;
+				response.ok = true;
+			} else {
+				const shortUrl = `${baseUrl}/${urlCode}`;
+				url = new Url({
+					longUrl,
+					shortUrl,
+					urlCode,
+					date: new Date()
+				});
+				await url.save();
+				response.url = url;
+				response.ok = true;
 			}
 		} else {
 			response.message = 'Invalid URL';
@@ -97,60 +86,62 @@ export class UrlService {
 			message: '',
 			urls: null
 		};
-		try {
-			const urls = await Url.find();
-			if (urls) {
-				response.ok = true;
-				response.urls = urls;
-			} else {
-				response.message = 'No urls found';
-			}
-		} catch (error) {
-			console.log('==> ERR ', error);
-			response.message = error.message;
-		}
+		response.urls = await Url.find();
+		response.ok = true;
 		return response;
 	}
 
-	async savePaste(content: string, password?: string, isPrivate: Boolean=false, expirationDate?: string,){
+	async savePaste(title: string, content: string, password?: string, isPrivate: Boolean=false, expirationDate?: string,){
 		const response = {
 			ok: false,
-			message: '',
 			paste: null
 		};
 
-		try {
-
-			const paste = new Paste({
-				content,
-				isPrivate,
-				password: password ? password : null,
-				expirationDate: expirationDate ? expirationDate : null
-			});
-			await paste.save();
-			response.paste = paste;
-			response.ok = true;
-			
-		} catch (e) {
-			console.log(e.message);
-			response.message = e.message;
-		}
+		const paste = new Paste({
+			title,
+			content,
+			isPrivate,
+			password: password ? password : null,
+			expirationDate: expirationDate ? expirationDate : null
+		});
+		await paste.save();
+		response.paste = paste;
+		response.ok = true;
 
 		return response;
 	}
 
 	async getPaste(id: string) {
+		const res = {
+			ok: false,
+			notfound: false,
+			url: null
+		};
 		const paste = await Paste.findById(id);
 		if(paste){
-			if(paste.expired){
-				throw new Error('Url expired');
-			}
 			paste.viewsCount++;
-			const savedData = await paste.save();
-			return savedData;
+			res.url = await paste.save();
+			res.ok = true;
 		}else{
-			throw new Error('Not found');
+			res.notfound = true;
 		}
+		return res;
+	}
+
+	async likePaste(id: string){
+		const res = {
+			ok: false,
+			message: 'success'
+		};
+		const paste = await Paste.findById(id);
+		if(paste){
+			paste.likesCount++;
+			await paste.save();
+			res.ok = true;
+		}else{
+			res.message = 'Not found';
+		}
+		return res;
 	}
 }
 

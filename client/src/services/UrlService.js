@@ -1,83 +1,31 @@
 const baseApi = 'http://localhost:5001/pagueporver/us-central1/app';
 //prod url https://us-central1-pagueporver.cloudfunctions.net/app
+//dev url http://localhost:5001/pagueporver/us-central1/app
 export class UrlService{
   async getUrl(id){
-    try {
-      const res = await fetch(`${baseApi}/url/${id}`);
-      if(res.status === 200){
-        const jsonRes = await res.json();
-        return {
-          ok: true,
-          data: jsonRes
-        }
-      }else{
-        console.log('err ', res.statusText);
-        return {
-          ok: false,
-          data: res.statusText,
-          notfound: res.status === 404
-        }
-      }
-    } catch (error) {
-      console.log('err ', error);
-      return {
-        ok: false,
-        data: error
-      }
-    }
+    const res = await fetch(`${baseApi}/url/${id}`);
+    const jsonRes = await res.json();
+    return jsonRes;
   }
   async saveUrl(longUrl){
-    try {
-      return this.sendPost('url', {
-        longUrl: longUrl
-      });
-    } catch (error) {
-      console.log('err ', error);
-      return {
-        ok: false,
-        data: error
-      }
-    }
+    return this.sendPost('url', {
+      longUrl: longUrl,
+      baseUrl: window.location.origin
+    });
   }
-  async savePaste(content, password, isPrivate, expirationDate){
-    try {
-      return this.sendPost('paste', {
-        content, 
-        password, 
-        isPrivate, 
-        expirationDate
-      });
-    } catch (error) {
-      console.log('err ', error);
-      return {
-        ok: false,
-        data: error
-      }
-    }
+  async savePaste(title, content, password, isPrivate, expirationDate){
+    return this.sendPost('paste', {
+      title,
+      content, 
+      password, 
+      isPrivate, 
+      expirationDate
+    });
   }
   async getPaste(id){
-    try {
-      const res = await fetch(`${baseApi}/paste/${id}`);
-      if(res.status === 200){
-        const jsonRes = await res.json();
-        return {
-          ok: true,
-          data: jsonRes
-        }
-      }else{
-        console.log('err ', res.statusText);
-        return {
-          ok: false,
-          data: res.statusText
-        }
-      }
-    } catch (error) {
-      console.log('err ', error);
-      return {
-        ok: false,
-        data: error
-      }
-    }
+    const res = await fetch(`${baseApi}/paste/${id}`);
+    const jsonRes = await res.json();
+    return jsonRes;
   }
   async sendPost(url, body){
     const res = await fetch(`${baseApi}/${url}`, {
@@ -97,5 +45,8 @@ export class UrlService{
         data: res.statusText
       }
     }
+  }
+  async likePaste(id){
+    return this.sendPost(`paste/like/${id}`, {});
   }
 }

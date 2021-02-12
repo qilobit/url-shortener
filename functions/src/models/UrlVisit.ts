@@ -2,10 +2,11 @@ import * as mongoose from 'mongoose';
 
 const urlVisitSquema = new mongoose.Schema({
 	url: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Url'
-    },
-    visitorIp: String,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Url'
+	},
+	ip: String,
+	country: String,
 	date: {
 		type: Date,
 		default: Date.now

@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SingleUrl from './pages/SingleUrl';
 import SinglePaste from './pages/SinglePaste';
 import NotFoundPage from './pages/NotFoundPage';
+import MyUrlsPage from './pages/MyUrls';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/_/create-paste" exact component={CreatePastePage} />
             <Route path="/:url" exact component={SingleUrl} />
             <Route path="/paste/:id" exact component={SinglePaste} />
+            <Route path="/_/my-urls" exact component={MyUrlsPage} />
             <Route path="/not-found" component={NotFoundPage} />
           </div>        
       </div>

@@ -1,4 +1,4 @@
-const baseApi = 'https://us-central1-pagueporver.cloudfunctions.net/app';
+const baseApi = 'http://localhost:5001/pagueporver/us-central1/app';
 //prod url https://us-central1-pagueporver.cloudfunctions.net/app
 //dev url http://localhost:5001/pagueporver/us-central1/app
 export class UrlService{
@@ -48,5 +48,10 @@ export class UrlService{
   }
   async likePaste(id){
     return this.sendPost(`paste/like/${id}`, {});
+  }
+  async getAllUrl(){
+    const res = await fetch(`${baseApi}/all-url`);
+    const jsonRes = await res.json();
+    return jsonRes;
   }
 }

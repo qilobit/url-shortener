@@ -4,9 +4,10 @@ import * as express from 'express';
 import * as cors from 'cors';
 import { UrlService } from "./services/UrlService";
 const expressApp = express();
+// const iplocate = require('iplocate');
 
 expressApp.use(cors());
-
+// expressApp.use(iplocate);
 expressApp.get('/all-url', async (req: express.Request, res: express.Response) => {
   try {
     await getCon();
@@ -22,13 +23,16 @@ expressApp.get('/all-url', async (req: express.Request, res: express.Response) =
 	}
 });
 
-expressApp.get('/url/:code', async (req: express.Request, res: express.Response) => {
+expressApp.get('/url/:code', async (req: any, res: express.Response) => {
   try {
+    // console.log('==> req.locationError ',req.locationError);
+    // console.log('==> req.location',req.location);
+
     const {code} = req.params;
     await getCon();
 		const service = new UrlService();
     const ip = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
-    console.log('Visit from ', ip);
+    console.log('==> Visit from ', ip);
 		const response = await service.getUrl(code, ip);
     return res.json(response);
 	} catch (e) {

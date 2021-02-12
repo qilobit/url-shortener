@@ -6,6 +6,10 @@ const urlSquema = new mongoose.Schema({
 		type: String,
     maxlength: 500
 	},
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	},
 	shortUrl: String,
 	date: {
 		type: Date,

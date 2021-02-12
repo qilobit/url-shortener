@@ -5,7 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle';
+// import 'bootstrap/dist/js/bootstrap.bundle';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLexJQc8mPlNqgWiKrAV2BdyWvjd_QWSs",

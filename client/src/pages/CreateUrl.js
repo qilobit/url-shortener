@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import { UrlService } from '../services/UrlService';
-
+import './CreateUrl.css';
 const CreateUrlPage = () => {
   const [urlData, seturlData] = useState('');
   const [error, seterror] = useState(null);
@@ -8,6 +8,7 @@ const CreateUrlPage = () => {
   const [success, setsuccess] = useState(false);
   const [shortUrl, setShortUrl] = useState('')
   const service = new UrlService();
+  const inputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +24,8 @@ const CreateUrlPage = () => {
         seterror(res.message);
       }
       setloading(false);
-
+    }else{
+      inputRef.current.focus();
     }
   };
 
@@ -32,8 +34,9 @@ const CreateUrlPage = () => {
       <h4>Create URL</h4>
 
       <form onSubmit={handleSubmit}>
-        <p>
+        <div className="url-create-wraper">
           <input
+            ref={inputRef}
             disabled={loading}
             value={urlData} 
             onChange={(e) => seturlData(e.target.value)}
@@ -42,7 +45,7 @@ const CreateUrlPage = () => {
           <button disabled={loading} className="btn btn-primary">
             {loading ? 'Wait..' : 'Short it'}
           </button>
-        </p>
+        </div>
       </form>
 
       {error && <div className="alert alert-danger">{error}</div>}

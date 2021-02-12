@@ -18,7 +18,8 @@ export class UrlService {
 			const savedData = await url.save();
 			const newVisit = new UrlVisit();
 			newVisit.url = url._id;
-			newVisit.visitorIp = ip;
+			newVisit.ip = ip;
+			newVisit.country = '';
 			await newVisit.save();
 			res.url = savedData;
 			res.ok = true;
@@ -52,7 +53,7 @@ export class UrlService {
 			message: '',
 			url: null
 		};
-		const urlCode = this.getUniqueCode();
+		const urlCode = await this.getUniqueCode();
 		
 		console.log('longUrl ', longUrl);
 		console.log('urlCode ', urlCode);
@@ -87,7 +88,7 @@ export class UrlService {
 			message: '',
 			urls: null
 		};
-		response.urls = await Url.find();
+		response.urls = await Url.find().sort('-viewsCount');
 		response.ok = true;
 		return response;
 	}

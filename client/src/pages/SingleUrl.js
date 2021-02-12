@@ -70,7 +70,7 @@ const SingleUrl = ({ match }) => {
                 ? <button disabled className="btn btn-primary">
                     { `Wait ${countDown} seconds` }
                   </button>
-                : <a href={urlData?.longUrl} target="_blank" className="btn btn-primary">Open link</a>
+                : <a href={urlData?.longUrl} className="btn btn-primary">Open link</a>
               }
             </>
           }

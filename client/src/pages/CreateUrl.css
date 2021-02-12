@@ -1,0 +1,10 @@
+.url-create-wraper{
+  display: flex;
+  align-items: baseline;
+}
+.url-create-wraper input{
+  width: 100%;
+}
+.url-create-wraper button{
+  width: 84px;
+}

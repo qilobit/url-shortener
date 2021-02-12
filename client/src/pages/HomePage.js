@@ -4,8 +4,8 @@ import './HomePage.css';
 const HomePage = () => {
 
     return (
-        <div className="container">
-            <div className="card mt-2 deep-shadow2">
+        <div className="container mt-3">
+            <div className="card deep-shadow2">
                 <div className="card-body">
                     <div className="row">
                         <div className="col-sm-6 top-left">

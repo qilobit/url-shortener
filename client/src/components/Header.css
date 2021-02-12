@@ -2,3 +2,15 @@
   font-family: 'Berkshire Swash', cursive;
   font-size: 2.1rem;
 }
+.login-area{
+  display: flex;
+  flex: 1;
+  place-content: flex-end;
+}
+@media screen and(max-width: 500px){
+  .login-area{
+    display: initial !important;
+    flex: unset !important;
+    place-content: unset !important;
+  }
+}

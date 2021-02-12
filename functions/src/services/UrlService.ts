@@ -52,13 +52,14 @@ export class UrlService {
 			message: '',
 			url: null
 		};
-		const urlCode = shortid.generate();
+		const urlCode = this.getUniqueCode();
 		
 		console.log('longUrl ', longUrl);
 		console.log('urlCode ', urlCode);
 
 		if (validUrl.isUri(longUrl)) {
 			let url = await Url.findOne({ longUrl });
+
 			if (url) {
 				response.url = url;
 				response.ok = true;
@@ -142,6 +143,15 @@ export class UrlService {
 			res.message = 'Not found';
 		}
 		return res;
+	}
+
+	async getUniqueCode(): Promise<string>{
+		const code = shortid.generate();
+		const exists = await Url.findOne({ urlCode: code });
+		if(exists){
+			return this.getUniqueCode();
+		}
+		return code;
 	}
 }
 

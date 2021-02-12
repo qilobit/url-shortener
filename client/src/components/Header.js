@@ -4,7 +4,7 @@ import './Header.css';
 
 const Header = () => {
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light soft-shadow2">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">Short-it</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +19,9 @@ const Header = () => {
                             <Link className="nav-link" to="/_/create-paste">Create paste</Link>
                         </li>
                     </ul>
+                    <div className="login-area">
+                        <Link className="nav-link" to="/login">Login</Link>
+                    </div>
                 </div>
             </div>
         </nav>

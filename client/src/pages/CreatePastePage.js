@@ -52,7 +52,7 @@ const CreatePastePage = () => {
     setremaininChars(pastContent.length === 0 ? 0 : pastContent.length);
   };
   return (
-    <div className="container">
+    <div className="container mt-2">
       <h4>Create a paste</h4>
       <form onSubmit={handleSubmit} className="my-2">
         <div className="form-group">

@@ -28,8 +28,8 @@ const CreateUrlPage = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Create URL</h2>
+    <div className="container mt-2">
+      <h4>Create URL</h4>
 
       <form onSubmit={handleSubmit}>
         <p>

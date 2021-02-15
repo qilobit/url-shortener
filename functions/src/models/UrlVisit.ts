@@ -7,7 +7,7 @@ const urlVisitSquema = new mongoose.Schema({
 	},
 	ip: String,
 	country: String,
-	date: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},

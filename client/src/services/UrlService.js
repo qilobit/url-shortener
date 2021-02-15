@@ -1,4 +1,4 @@
-const baseApi = 'http://localhost:5001/pagueporver/us-central1/app';
+const baseApi = 'http://localhost:3001';
 //prod url https://us-central1-pagueporver.cloudfunctions.net/app
 //dev url http://localhost:5001/pagueporver/us-central1/app
 export class UrlService{

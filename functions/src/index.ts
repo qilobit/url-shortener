@@ -1,13 +1,22 @@
-import * as functions from "firebase-functions";
+// import * as functions from "firebase-functions";
 import * as mongoose from 'mongoose';
 import * as express from 'express';
 import * as cors from 'cors';
+const fileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
 import { UrlService } from "./services/UrlService";
+import { AdService } from "./services/AdService";
+import { MediaService } from './services/MediaService';
 const expressApp = express();
-// const iplocate = require('iplocate');
 
 expressApp.use(cors());
-// expressApp.use(iplocate);
+expressApp.use(
+	bodyParser.urlencoded({
+		extended: false
+	})
+);
+// expressApp.use(bodyParser.json());
+
 expressApp.get('/all-url', async (req: express.Request, res: express.Response) => {
   try {
     await getCon();
@@ -108,7 +117,78 @@ expressApp.get('/paste/:id', async (req: express.Request, res: express.Response)
 	}
 });
 
-export const app = functions.runWith({memory: '1GB'}).https.onRequest(expressApp);
+expressApp.post('/ad', fileUpload({useTempFiles: true}), async (req: any, res: express.Response) => {
+  try {
+    // console.log('==> req.files ', req.files);
+    
+    const {name, link, expirationDate} = req.body;
+    if(!req.files || !req.files.media || !name || !link){
+      return res.json({
+        ok: false,
+        message: 'Invalid params (name, link, media)'
+      });
+    }
+    await getCon();
+		const service = new AdService();
+		const response = await service.saveAd(name, link, req.files.media, expirationDate);
+		return res.json(response);
+	} catch (e) {
+		console.log(e.message);
+    return res.json({
+      ok: false,
+      message: e.message
+    });
+	}
+});
+
+expressApp.get('/media/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const {id} = req.params;
+    console.log('==> Get media ',id);
+    
+    await getCon();
+		const service = new MediaService();
+		const media = await service.getMedia(id);
+    console.log('==> media.length ', media.length);
+    
+    res.writeHead(200, {
+      'Content-Type': 'image/jpg',
+      'Content-Length': media.length
+    });
+    return res.end(media);
+	} catch (e) {
+		console.log(e.message);
+    return res.json({
+      ok: false,
+      message: e.message
+    });
+	}
+});
+
+expressApp.get('/ad/last', async (req: express.Request, res: express.Response) => {
+  try {
+    console.log('==> Get last ad ');
+    
+    await getCon();
+		const service = new AdService();
+		const ad = await service.getLast();
+    
+    return res.json(ad);
+	} catch (e) {
+		console.log(e.message);
+    return res.json({
+      ok: false,
+      message: e.message
+    });
+	}
+});
+
+// export const app = functions.runWith({memory: '1GB'}).https.onRequest(expressApp);
+
+expressApp.listen(3001, () => {
+  console.log('Server running..');
+  
+});
 
 function getCon(){
   return new Promise((resolve, reject) => {

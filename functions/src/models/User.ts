@@ -13,9 +13,13 @@ const userSquema = new mongoose.Schema({
     type: String,
     maxlength: 70
   },
-	date: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},
+  deleted: {
+    type: Boolean,
+    default: false
+  },
 });
 module.exports = mongoose.model('User', userSquema);

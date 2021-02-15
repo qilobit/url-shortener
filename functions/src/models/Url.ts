@@ -11,7 +11,7 @@ const urlSquema = new mongoose.Schema({
 		ref: 'User'
 	},
 	shortUrl: String,
-	date: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},
@@ -32,6 +32,10 @@ const urlSquema = new mongoose.Schema({
     default: null
   },
   expired: {
+    type: Boolean,
+    default: false
+  },
+	deleted: {
     type: Boolean,
     default: false
   },

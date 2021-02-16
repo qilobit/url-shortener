@@ -26,3 +26,11 @@ code {
 .break-word{
   word-break: break-all;
 }
+.ad{
+  margin: 20px auto 20px auto;
+  width: auto;
+  max-height: 300px;
+}
+.pointer{
+  cursor: pointer;
+}

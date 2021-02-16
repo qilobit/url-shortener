@@ -15,7 +15,7 @@ expressApp.use(
 		extended: false
 	})
 );
-// expressApp.use(bodyParser.json());
+expressApp.use(bodyParser.json());
 
 expressApp.get('/all-url', async (req: express.Request, res: express.Response) => {
   try {
@@ -34,15 +34,12 @@ expressApp.get('/all-url', async (req: express.Request, res: express.Response) =
 
 expressApp.get('/url/:code', async (req: any, res: express.Response) => {
   try {
-    // console.log('==> req.locationError ',req.locationError);
-    // console.log('==> req.location',req.location);
-
-    const {code} = req.params;
+    const {code, ad=""} = req.params;
     await getCon();
 		const service = new UrlService();
     const ip = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
     console.log('==> Visit from ', ip);
-		const response = await service.getUrl(code, ip);
+		const response = await service.getUrl(code, ip, ad);
     return res.json(response);
 	} catch (e) {
 		console.log(e.message);
@@ -119,7 +116,7 @@ expressApp.get('/paste/:id', async (req: express.Request, res: express.Response)
 
 expressApp.post('/ad', fileUpload({useTempFiles: true}), async (req: any, res: express.Response) => {
   try {
-    // console.log('==> req.files ', req.files);
+    console.log('==> req.body ', req.body);
     
     const {name, link, expirationDate} = req.body;
     if(!req.files || !req.files.media || !name || !link){
@@ -182,6 +179,27 @@ expressApp.get('/ad/last', async (req: express.Request, res: express.Response) =
     });
 	}
 });
+
+expressApp.put('/ad/visit/:id', async (req: express.Request, res: express.Response) => {
+  try {
+    const {id} = req.params;
+    console.log('==> Add ad visit ', id);
+    
+    await getCon();
+		const service = new AdService();
+		const ad = await service.addOneVisit(id);
+    
+    return res.json(ad);
+	} catch (e) {
+		console.log(e.message);
+    return res.json({
+      ok: false,
+      message: e.message
+    });
+	}
+});
+
+//addOneVisit
 
 // export const app = functions.runWith({memory: '1GB'}).https.onRequest(expressApp);
 

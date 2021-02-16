@@ -56,5 +56,10 @@ export class AdService {
 		return response;
 	}
 
+	async addOneVisit(adId: String){
+		const ad = await Ad.findById(adId);
+		ad.clicksCount++;
+		return ad.save();
+	}
 }
 

@@ -45,7 +45,7 @@ const MyUrlsPage = ({ match }) => {
             <tbody>
               { list !== null && list.map(x => {
                 return <tr key={x._id}>
-                  <td>{x.urlCode}</td>
+                  <td><a href={`${window.location.origin}/${x.urlCode}`} target="_blank">{x.urlCode}</a></td>
                   <td>{x.longUrl}</td>
                   <td>{x.date}</td>
                   <td>{x.viewsCount}</td>

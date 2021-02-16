@@ -10,6 +10,10 @@ const urlSquema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	},
+	ad: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Ad'
+	},
 	shortUrl: String,
 	createdAt: {
 		type: Date,

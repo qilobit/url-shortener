@@ -64,7 +64,7 @@ const SinglePaste = ({ match, window }) => {
       {loading && <div className="text-center"><Loader /></div>}
       <div className="container text-center">
         
-        <div className="card mt-2 text-left">
+        <div className="card mt-3 text-left">
           <div className="card-header">
             <h4 className="card-title">{paste?.title}</h4>
           </div>

@@ -1,57 +1,30 @@
-const baseApi = 'http://localhost:3001';
-//prod url https://us-central1-pagueporver.cloudfunctions.net/app
-//dev url http://localhost:5001/pagueporver/us-central1/app
-export class UrlService{
+import { Http } from './Http';
+export class UrlService extends Http{
   async getUrl(id){
-    const res = await fetch(`${baseApi}/url/${id}`);
-    const jsonRes = await res.json();
-    return jsonRes;
+    return this.get(`url/${id}`);
   }
   async saveUrl(longUrl){
-    return this.sendPost('url', {
+    return this.post('url', JSON.stringify({
       longUrl: longUrl,
       baseUrl: window.location.origin
-    });
+    }));
   }
   async savePaste(title, content, password, isPrivate, expirationDate){
-    return this.sendPost('paste', {
+    return this.post('paste', JSON.stringify({
       title,
       content, 
       password, 
       isPrivate, 
       expirationDate
-    });
+    }));
   }
   async getPaste(id){
-    const res = await fetch(`${baseApi}/paste/${id}`);
-    const jsonRes = await res.json();
-    return jsonRes;
-  }
-  async sendPost(url, body){
-    const res = await fetch(`${baseApi}/${url}`, {
-      body: JSON.stringify(body),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if(res.status === 200){
-      const jsonRes = await res.json();
-      return jsonRes;
-    }else{
-      console.log(`ERR [${res.status}]`, res.statusText);
-      return {
-        ok: false,
-        data: res.statusText
-      }
-    }
+    return this.get(`paste/${id}`);
   }
   async likePaste(id){
-    return this.sendPost(`paste/like/${id}`, {});
+    return this.post(`paste/like/${id}`, {});
   }
   async getAllUrl(){
-    const res = await fetch(`${baseApi}/all-url`);
-    const jsonRes = await res.json();
-    return jsonRes;
+    return this.get(`all-url`);
   }
 }

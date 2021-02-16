@@ -6,7 +6,7 @@ const UrlVisit = require('../models/UrlVisit');
 
 export class UrlService {
 	constructor() {}
-	async getUrl(code: string, ip: string) {
+	async getUrl(code: string, ip: string, adId: string) {
 		const res = {
 			ok: false,
 			notfound: false,
@@ -20,6 +20,7 @@ export class UrlService {
 			newVisit.url = url._id;
 			newVisit.ip = ip;
 			newVisit.country = '';
+			newVisit.ad = adId;
 			await newVisit.save();
 			res.url = savedData;
 			res.ok = true;
